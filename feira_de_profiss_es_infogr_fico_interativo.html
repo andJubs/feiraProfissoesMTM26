@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feira de Profissões - Mapeamento Vocacional & Infográfico Interativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f6ff',
+                            100: '#e0edff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased leading-relaxed min-h-screen">
+
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🎓</span>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Feira de Profissões</h1>
+                    <p class="text-xs text-blue-200">Painel Geral de Mapeamento Vocacional & Caminhos de Ingresso</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-2 text-xs md:text-sm font-medium">
+                <a href="#kpi-section" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Resumo</a>
+                <a href="#areas-section" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Áreas</a>
+                <a href="#ranking-section" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Top Profissões</a>
+                <a href="#series-section" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Por Série</a>
+                <a href="#pathways-section" class="px-3 py-1.5 rounded-full bg-emerald-500/30 border border-emerald-400/40 text-emerald-100 hover:bg-emerald-500/50 transition">🏛️ Ingresso & Faculdades</a>
+                <a href="#directory-section" class="px-3 py-1.5 rounded-lg bg-amber-400 text-slate-900 font-bold hover:bg-amber-300 transition shadow">📋 Lista por Profissão</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="max-w-3xl">
+                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold mb-3">
+                    Relatório Integrado de Carreira & Orientação Acadêmica
+                </span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3">
+                    Visão Geral das Aspirações Profissionais dos Alunos
+                </h2>
+                <p class="text-slate-600 text-sm md:text-base mb-4">
+                    Este painel interativo sintetiza as intenções de carreira tabuladas para a Feira de Profissões. O objetivo principal é subsidiar a organização das oficinas e palestras, garantindo prioridade de atendimento aos estudantes do <strong>3º Ano</strong>, que se encontram em fase conclusiva de transição para o ensino superior e mercado de trabalho.
+                </p>
+                <div class="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <span class="font-bold text-slate-700">📌 Atualização Importante:</span> 
+                    As categorias <strong>Educação Física</strong> (Licenciatura/Bacharelado) e <strong>Atleta Profissional</strong> (Carreira Esportiva) foram totalmente separadas para precisão no direcionamento das oficinas.
+                </div>
+            </div>
+        </section>
+
+        <section id="kpi-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Total Mapeado</p>
+                    <h3 class="text-3xl font-black text-slate-900" id="kpi-total-students">196</h3>
+                    <p class="text-xs text-slate-500 mt-1">Alunos em 8 turmas</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold">
+                    👥
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Profissões Definidas</p>
+                    <h3 class="text-3xl font-black text-purple-600" id="kpi-total-professions">26</h3>
+                    <p class="text-xs text-slate-500 mt-1">Áreas de interesse ativas</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl font-bold">
+                    🎯
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Carreiras Destaque</p>
+                    <h3 class="text-3xl font-black text-emerald-600">TI & Robótica</h3>
+                    <p class="text-xs text-slate-500 mt-1">22 alunos interessados</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-bold">
+                    💻
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between border-l-4 border-l-amber-500">
+                <div>
+                    <p class="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Prioridade (3º Ano)</p>
+                    <h3 class="text-3xl font-black text-slate-900">45 Alunos</h3>
+                    <p class="text-xs text-slate-500 mt-1">Formandos do Ensino Médio</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold">
+                    ⭐
+                </div>
+            </div>
+        </section>
+
+        <section id="areas-section" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-6">
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">1. Distribuição Por Grandes Áreas do Conhecimento</h3>
+                <p class="text-slate-600 text-sm">
+                    A análise agregada demonstra forte concentração nas áreas da <strong>Saúde e Bem-Estar</strong> (30.1%) e <strong>Tecnologia & Exatas</strong> (21.4%), seguidas por <strong>Humanas e Negócios</strong> e <strong>Artes e Mídias Visual</strong>.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7">
+                    <div class="chart-container">
+                        <canvas id="chartAreas"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 space-y-3">
+                    <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Detalhamento Por Macroárea</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-600">
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span> <strong>Saúde & Bem-Estar:</strong></span>
+                            <span class="font-bold text-slate-800">59 alunos (30.1%)</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-500"></span> <strong>Tecnologia & Exatas (STEM):</strong></span>
+                            <span class="font-bold text-slate-800">42 alunos (21.4%)</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-500"></span> <strong>Humanas, Sociais & Negócios:</strong></span>
+                            <span class="font-bold text-slate-800">29 alunos (14.8%)</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span> <strong>Artes, Comunicação & Mídias:</strong></span>
+                            <span class="font-bold text-slate-800">22 alunos (11.2%)</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> <strong>Biológicas, Terra & Agrárias:</strong></span>
+                            <span class="font-bold text-slate-800">13 alunos (6.6%)</span>
+                        </li>
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span> <strong>Esporte, Aviação & Segurança:</strong></span>
+                            <span class="font-bold text-slate-800">31 alunos (15.8%)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ranking-section" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-6">
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">2. Ranking das Profissões Mais Populares</h3>
+                <p class="text-slate-600 text-sm">
+                    As carreiras de <strong>Robótica</strong> e <strong>Desenvolvedor de Software / TI</strong> empatam no topo (11 alunos cada), seguidas de perto por <strong>Fisioterapia</strong> (10 alunos), <strong>Medicina</strong>, <strong>Enfermagem</strong>, <strong>Engenharia</strong> e <strong>Psicologia</strong> (9 alunos cada).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-8">
+                    <div class="chart-container">
+                        <canvas id="chartRanking"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                    <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                        <span>💡</span> Destaque da Separação
+                    </h4>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs space-y-2">
+                        <p class="font-bold text-blue-900">🏃 Atleta Profissional (8 alunos):</p>
+                        <p class="text-slate-600">Focado em esportes de alta performance e carreira atlética.</p>
+                        <hr class="border-slate-100">
+                        <p class="font-bold text-emerald-900">⚽ Educação Física (5 alunos):</p>
+                        <p class="text-slate-600">Focado na formação acadêmica, licenciatura e preparação física.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="series-section" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-6">
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">3. Distribuição de Estudantes por Série</h3>
+                <p class="text-slate-600 text-sm">
+                    O <strong>1º Ano</strong> lidera em volume bruto de estudantes mapeados (93 alunos nas turmas 1A, 1B e 1C), enquanto o <strong>3º Ano</strong> atua como foco prioritário para ingresso universitário imediato (45 alunos nas turmas 3A e 3B).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 text-center">Volume Total de Alunos por Ano</h4>
+                    <div class="chart-container">
+                        <canvas id="chartGradeDistribution"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 text-center">Top Escolhas dos Formandos (3º Ano)</h4>
+                    <div class="chart-container">
+                        <canvas id="chartThirdYear"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pathways-section" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-8">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🏛️</span>
+                    <h3 class="text-2xl font-black text-slate-900">Guia de Acesso ao Ensino Superior & Instituições</h3>
+                </div>
+                <p class="text-slate-600 text-sm mt-1">
+                    Exames, programas de seleção e financiamento para os estudantes da rede estadual de São Paulo.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                    <span>📝</span> Exames & Programas de Ingressos
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="bg-amber-50/70 p-5 rounded-xl border border-amber-300 hover:border-amber-400 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-extrabold text-amber-950 text-base">Provão Paulista (PP)</h5>
+                            <span class="px-2 py-0.5 bg-amber-200 text-amber-900 text-[10px] font-bold rounded">Rede Estadual SP</span>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-700 mb-1">Avaliação Seriada do Estado de SP</p>
+                        <p class="text-xs text-slate-600">Exame aplicado do 1º ao 3º ano com mais de 15.000 vagas diretas sem vestibular tradicional para USP, Unicamp, Unesp, Fatec e Univesp.</p>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:border-blue-300 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-extrabold text-blue-900 text-base">ENEM</h5>
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">Nacional</span>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-700 mb-1">Exame Nacional do Ensino Médio</p>
+                        <p class="text-xs text-slate-600">Principal avaliação do país. Serve de passaporte para federais via SiSU, bolsas privadas via ProUni e financiamento via FIES.</p>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:border-purple-300 transition">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-extrabold text-purple-900 text-base">VESTIB</h5>
+                            <span class="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-bold rounded">Vestibulares Próprios</span>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-700 mb-1">Processos Seletivos Tradicionais</p>
+                        <p class="text-xs text-slate-600">Provas específicas organizadas pelas bancas universitárias (ex: FUVEST para USP, COMVEST para Unicamp, VUNESP para Unesp e VESTIBULAR FATEC).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                    <span>🏫</span> Principais Instituições Públicas e Gratuitas (SP)
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="p-5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-black text-xl text-amber-400">USP</h5>
+                            <span class="text-[10px] px-2 py-0.5 bg-white/10 rounded">Estadual</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-200 mb-1">Universidade de São Paulo</p>
+                        <p class="text-xs text-slate-300">Maior universidade pública da América Latina. Cursos de excelência em todas as áreas.</p>
+                    </div>
+
+                    <div class="p-5 rounded-xl bg-gradient-to-br from-indigo-900 to-blue-900 text-white shadow">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-black text-xl text-cyan-300">UNICAMP</h5>
+                            <span class="text-[10px] px-2 py-0.5 bg-white/10 rounded">Estadual</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-200 mb-1">Universidade Estadual de Campinas</p>
+                        <p class="text-xs text-slate-300">Referência internacional em pesquisa, exatas, tecnologia e medicina.</p>
+                    </div>
+
+                    <div class="p-5 rounded-xl bg-gradient-to-br from-purple-900 to-indigo-900 text-white shadow">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-black text-xl text-pink-300">FATEC</h5>
+                            <span class="text-[10px] px-2 py-0.5 bg-white/10 rounded">Estadual Técnico</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-200 mb-1">Faculdades de Tecnologia de SP</p>
+                        <p class="text-xs text-slate-300">Cursos superiores de tecnologia com foco no mercado prático de trabalho.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="directory-section" class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">📋</span>
+                        <h3 class="text-2xl font-black text-slate-900">Diretório de Alunos por Profissão</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm mt-1">
+                        Consulte abaixo a lista completa de alunos organizados por profissão com ordenação priorizada do <strong>3º Ano ao 1º Ano</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div class="lg:col-span-5">
+                    <label for="searchInput" class="block text-xs font-bold text-slate-700 uppercase mb-1">Buscar por Aluno ou Profissão</label>
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Digite um nome ou profissão..." 
+                               class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <span class="absolute left-3 top-2.5 text-slate-400">🔍</span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4">
+                    <label for="filterGrade" class="block text-xs font-bold text-slate-700 uppercase mb-1">Filtrar por Série</label>
+                    <select id="filterGrade" class="w-full py-2 px-3 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="ALL">Todas as Séries (3º, 2º e 1º Anos)</option>
+                        <option value="3">Apenas 3º Ano (Formandos - Prioridade)</option>
+                        <option value="2">Apenas 2º Ano</option>
+                        <option value="1">Apenas 1º Ano</option>
+                    </select>
+                </div>
+
+                <div class="lg:col-span-3 flex items-end">
+                    <button id="resetFilters" class="w-full py-2 px-4 bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold rounded-lg transition">
+                        Limpar Filtros
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs font-medium text-slate-500 px-1">
+                <span>Exibindo <strong id="visibleCount" class="text-slate-900">0</strong> áreas tabuladas</span>
+                <span class="text-amber-600 font-bold">⭐ Ordenação: 3º Ano ➔ 2º Ano ➔ 1º Ano</span>
+            </div>
+
+            <div id="professionsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white border-t border-slate-800 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-sm font-semibold">Feira de Profissões - Mapeamento Vocacional Escolar</p>
+            <p class="text-xs text-slate-400">Dados consolidados e atualizados para orientação de carreira dos estudantes.</p>
+        </div>
+    </footer>
+
+    <script>
+        const professionData = [
+            {
+                title: "Administração",
+                category: "Humanas/Negócios",
+                icon: "💼",
+                students: [
+                    { grade: "3A", name: "João Vitor de Vasconcellos" },
+                    { grade: "2A", name: "Kayllaine Vitória da Silva" },
+                    { grade: "2A", name: "Marceli de Oliveira Duarte" },
+                    { grade: "2B", name: "Joao Victor Alves Farias" },
+                    { grade: "1A", name: "Junior Andreatti de Almeida" },
+                    { grade: "1C", name: "Luiz Vinícius Rêgo da Silva" }
+                ]
+            },
+            {
+                title: "Agronomia",
+                category: "Biológicas/Terra",
+                icon: "🌾",
+                students: [
+                    { grade: "3A", name: "Beatriz de Oliveira Alarcon" },
+                    { grade: "3A", name: "Jose Gustavo Ribeiro da Costa" },
+                    { grade: "3B", name: "Eduardo Ferreira da Silva" },
+                    { grade: "1A", name: "Jonathan Bispo Carneiro" }
+                ]
+            },
+            {
+                title: "Arquitetura e Engenharia Civil",
+                category: "Artes/Design",
+                icon: "🏛️",
+                students: [
+                    { grade: "2C", name: "Guilherme Henrique Dalio" },
+                    { grade: "2C", name: "Soffia Emanuelly de Oliveira Toledo" },
+                    { grade: "1B", name: "Jose Leonardo Silva Sousa" },
+                    { grade: "1C", name: "Bryan Godoi de Oliveira" },
+                    { grade: "1C", name: "Janderson de Souza Santos" },
+                    { grade: "1C", name: "Jorge Luis Piamo Martinez" },
+                    { grade: "1C", name: "Lucas Kauā Rodrigues da Silva" },
+                    { grade: "1C", name: "Pedro de Matos Duarte" },
+                    { grade: "1C", name: "Victor Hugo da Silva Gonçalves" }
+                ]
+            },
+            {
+                title: "Atleta Profissional",
+                category: "Esporte/Segurança",
+                icon: "🏃",
+                students: [
+                    { grade: "3B", name: "Eduardo Felipi Machado Martins" },
+                    { grade: "3B", name: "Majuann Emanuel Serrano M. Galindo" },
+                    { grade: "2A", name: "Filipi Henrique Canessa Bicudo Saturno" },
+                    { grade: "2C", name: "Arthur Santos Macedo" },
+                    { grade: "1A", name: "Kleberson Kaua dos Santos Oliveira" },
+                    { grade: "1A", name: "Matheus Gabriel Dominici Lefort" },
+                    { grade: "1A", name: "Nicolas Fernando Mariano Pereira" },
+                    { grade: "1C", name: "Joao Paulo Estevam de Freitas" }
+                ]
+            },
+            {
+                title: "Biologia",
+                category: "Biológicas/Terra",
+                icon: "🧬",
+                students: [
+                    { grade: "3A", name: "Maria Beatriz Ferreira de Almeida" },
+                    { grade: "3A", name: "Nícolas Gabriel Carvalho Ferreira" },
+                    { grade: "2B", name: "Pricila Soares do Nascimento" },
+                    { grade: "2C", name: "Kevin da Silva Feitosa Goncalves" },
+                    { grade: "1A", name: "Francielly dos Santos de Carvalho" },
+                    { grade: "1C", name: "Ana Clara de Magalhaes" },
+                    { grade: "1C", name: "Daniel Lemos de Oliveira" },
+                    { grade: "1C", name: "Gabrielly Silva Felinsqui" },
+                    { grade: "1C", name: "Ryan Alfredo Rufino de Matos" }
+                ]
+            },
+            {
+                title: "Biomedicina",
+                category: "Saúde",
+                icon: "🔬",
+                students: [
+                    { grade: "3A", name: "Beatriz da Silva Rocha Rodrigues" },
+                    { grade: "3A", name: "Camille de Godoy Nascimento" },
+                    { grade: "3B", name: "Pietra Vitoria Greco dos Santos" },
+                    { grade: "2A", name: "Matheus Henrique Ramos" },
+                    { grade: "1A", name: "Fernanda Luiza de Souza" },
+                    { grade: "1C", name: "Jéssica Thayná Araújo Silva" },
+                    { grade: "1C", name: "Maria Eduarda da Rocha Pires" }
+                ]
+            },
+            {
+                title: "Carreiras Militares / Emergências",
+                category: "Esporte/Segurança",
+                icon: "👨‍🚒",
+                students: [
+                    { grade: "3A", name: "Emilly Hana Escaranelli Silva" },
+                    { grade: "3A", name: "Marcos Vinícius Santos Gomes" },
+                    { grade: "3B", name: "Geovana Vitória dos Santos" },
+                    { grade: "1B", name: "Pietro Henrique Araujo Silva" },
+                    { grade: "1C", name: "Gabriel Silva de Paiva Pereira" },
+                    { grade: "1C", name: "Leandro Yuri dos Santos Lima" }
+                ]
+            },
+            {
+                title: "Cinema e Fotografia",
+                category: "Artes/Design",
+                icon: "🎬",
+                students: [
+                    { grade: "3B", name: "Felipe Leme Ghion" },
+                    { grade: "2A", name: "Sarah Gabriele de Almeida Rodrigues" },
+                    { grade: "2B", name: "Yago Roberto Vaz de Lima" },
+                    { grade: "2C", name: "Nicolas Eduardo da Silva Ferreira" },
+                    { grade: "1A", name: "Jhonatas Antony da Silva" },
+                    { grade: "1B", name: "Alex Bispo Carneiro" },
+                    { grade: "1B", name: "Wilians Pereira Fernandes" },
+                    { grade: "1C", name: "Isabelly Basso Freitas" }
+                ]
+            },
+            {
+                title: "Comissário de Bordo",
+                category: "Esporte/Segurança",
+                icon: "✈️",
+                students: [
+                    { grade: "3A", name: "Sophia Eloá Maziero Correia" },
+                    { grade: "2B", name: "Livia Maria de Lima Araujo" },
+                    { grade: "2B", name: "Raphaela Heloísa Maziero Costa" },
+                    { grade: "2C", name: "Joao Victor de Magalhaes N. Silva" },
+                    { grade: "2C", name: "Yasmin Pietra Rosa de Almeida" },
+                    { grade: "1A", name: "Ana Beatriz Rodrigues de Siqueira" },
+                    { grade: "1A", name: "Beatriz Vitoria Rodrigues dos Santos" },
+                    { grade: "1A", name: "Lorenna Lavinia Felix de Almeida" }
+                ]
+            },
+            {
+                title: "Desenvolvedor de Software / TI",
+                category: "Tecnologia/STEM",
+                icon: "💻",
+                students: [
+                    { grade: "3A", name: "Iasmym da Silva Matos" },
+                    { grade: "3A", name: "Ryan Kaique Leme da Silva" },
+                    { grade: "2B", name: "Bernardo Fernandes Dias" },
+                    { grade: "2B", name: "Nicolas Roberto Santos de Moraes" },
+                    { grade: "2B", name: "Samuel Carlos Rodrigues" },
+                    { grade: "2B", name: "Victor Hugo Alves Carmignotto" },
+                    { grade: "2C", name: "Eric Guilherme Sampaio Hernandez" },
+                    { grade: "1B", name: "Guilherme Moraes" },
+                    { grade: "1B", name: "Joao Victor dos Santos Muniz" },
+                    { grade: "1B", name: "Pedro Gabriel Danis Padilha" },
+                    { grade: "1C", name: "Nicolas Garozzo Jacomelli" }
+                ]
+            },
+            {
+                title: "Direito",
+                category: "Humanas/Negócios",
+                icon: "⚖️",
+                students: [
+                    { grade: "3B", name: "Cibele Puerta da Silva" },
+                    { grade: "2A", name: "Aila Vitória Balbino da Silva" },
+                    { grade: "2A", name: "Evelyn Adriely Mendes da Silva" },
+                    { grade: "2C", name: "Heloisa Moura Franco" },
+                    { grade: "2C", name: "Jafya Vitória Ribeiro Cunha" },
+                    { grade: "1A", name: "Jamerson Isac Eugenio da Silva" },
+                    { grade: "1A", name: "Milena Silva Rodrigues" },
+                    { grade: "1B", name: "Michele Stefany Ferraz Alemao" }
+                ]
+            },
+            {
+                title: "Educação Física",
+                category: "Esporte/Segurança",
+                icon: "⚽",
+                students: [
+                    { grade: "3B", name: "Aghata Victoria da Silva" },
+                    { grade: "3B", name: "Nicolas Tobias Greco" },
+                    { grade: "1A", name: "Adrian Arthur Oliveira Verza" },
+                    { grade: "1A", name: "Júlia Vitória Silva Benedito" },
+                    { grade: "1A", name: "Lucas Lemos Muniz" }
+                ]
+            },
+            {
+                title: "Enfermagem",
+                category: "Saúde",
+                icon: "🩺",
+                students: [
+                    { grade: "3A", name: "Laura Tavares Pinto" },
+                    { grade: "3A", name: "Vitoria Beatriz Batista Pereira" },
+                    { grade: "3B", name: "Guilherme de Jesus Silva Nascimento" },
+                    { grade: "2A", name: "Bianca Victoria de Moraes" },
+                    { grade: "2B", name: "Livia Ramires de Lima" },
+                    { grade: "1A", name: "Fernanda Moreira Nery dos Santos" },
+                    { grade: "1A", name: "Júlia Vitória da Silva Barros" },
+                    { grade: "1C", name: "Maria Geovana F. M. dos Santos" },
+                    { grade: "1C", name: "Rebeka Lopes Branco" }
+                ]
+            },
+            {
+                title: "Engenharia",
+                category: "Tecnologia/STEM",
+                icon: "⚙️",
+                students: [
+                    { grade: "3A", name: "Gabriel Stella Santana" },
+                    { grade: "3A", name: "João Ernesto Bueno Sandrini" },
+                    { grade: "3B", name: "Igor Merlin dos Santos" },
+                    { grade: "2B", name: "Italo Aristel da Silva Marinho" },
+                    { grade: "2C", name: "Heitor de Souza Mendes" },
+                    { grade: "1A", name: "Kaua Enrique de Lima Franco" },
+                    { grade: "1A", name: "Victor Gabriel Conde de Melo" },
+                    { grade: "1C", name: "Bernardo William Marques de Oliveira" },
+                    { grade: "1C", name: "Gustavo dos Santos Mazoni" }
+                ]
+            },
+            {
+                title: "Estética",
+                category: "Saúde",
+                icon: "✨",
+                students: [
+                    { grade: "3A", name: "Camille Victorya Canario de Arantes" },
+                    { grade: "3B", name: "Laura Goncalves Ferreira" },
+                    { grade: "3B", name: "Victoria Eduarda Martins da Silva" },
+                    { grade: "2C", name: "Emanuelle Beatriz Cruz da Silva" },
+                    { grade: "1B", name: "Bianca da Silva Rocha" },
+                    { grade: "1B", name: "Lavínia Aparecida Jacinto" },
+                    { grade: "1C", name: "Paola Alves Mariano" }
+                ]
+            },
+            {
+                title: "Fisioterapia",
+                category: "Saúde",
+                icon: "🦴",
+                students: [
+                    { grade: "3A", name: "Lidia Agostinho Felix" },
+                    { grade: "3A", name: "Raphaela Rodrigues Fernandes" },
+                    { grade: "3B", name: "Davila Kessia Trindade Cunha" },
+                    { grade: "2A", name: "Anna Beatriz Dias Antonini" },
+                    { grade: "2A", name: "Christopher Samoel de T. Leme Sousa" },
+                    { grade: "2A", name: "Heloá Aguiar de Souza" },
+                    { grade: "2A", name: "Laysa Amanda Oliveira" },
+                    { grade: "2C", name: "Ismael Felipe de Oliveira Costa" },
+                    { grade: "2C", name: "Kaua Araujo Santos" },
+                    { grade: "1A", name: "Raissa Vitoria Cordeiro de Sousa" }
+                ]
+            },
+            {
+                title: "Gastronomia",
+                category: "Humanas/Negócios",
+                icon: "👨‍🍳",
+                students: [
+                    { grade: "2A", name: "Pablo Samuel Custodio Barleta" },
+                    { grade: "1B", name: "Jorge Manoel Ferreira" },
+                    { grade: "1B", name: "Maria Luiza Barbosa Cruz" },
+                    { grade: "1B", name: "Nathan de Moraes" },
+                    { grade: "1B", name: "Paulo Rodrigo de Souza Dias" },
+                    { grade: "1B", name: "Yasmim da Silva Assunçao" },
+                    { grade: "1C", name: "Michel dos Santos Costa" }
+                ]
+            },
+            {
+                title: "Jornalismo",
+                category: "Artes/Design",
+                icon: "📰",
+                students: [
+                    { grade: "3B", name: "Pedro de Mello" },
+                    { grade: "1A", name: "Brunno Maya e Silva Coresma" },
+                    { grade: "1A", name: "Cibelly Cecilia Pigozzi Cavalheiro" },
+                    { grade: "1B", name: "Maria Eduarda Rodrigues Soglia" },
+                    { grade: "1B", name: "Yasmin Pinheiro Almeida" },
+                    { grade: "1C", name: "Italo Lourenço de Freitas" }
+                ]
+            },
+            {
+                title: "Marketing e Publicidade",
+                category: "Humanas/Negócios",
+                icon: "📢",
+                students: [
+                    { grade: "2A", name: "Anne Emanuelly Souza Silva" },
+                    { grade: "2A", name: "Kauany Fernanda de Faria Bibiano" },
+                    { grade: "2C", name: "Giovanni Soares Lopes" },
+                    { grade: "1B", name: "Victor Gabriel Amorim de Sousa" },
+                    { grade: "1C", name: "Ana Beatriz Mendes de Oliveira" },
+                    { grade: "1C", name: "Maria Isabella Nascimento de Godoy" }
+                ]
+            },
+            {
+                title: "Medicina",
+                category: "Saúde",
+                icon: "🩺",
+                students: [
+                    { grade: "3A", name: "Karina Soares Silva" },
+                    { grade: "2A", name: "Joao Pedro Torres Castelhano" },
+                    { grade: "2A", name: "Stefany Marcondes da Silva" },
+                    { grade: "1B", name: "Isabelly Cristina Messias Batista" },
+                    { grade: "1B", name: "Nicolle Eduarda Canario de Arantes" },
+                    { grade: "1B", name: "Pryscila Vitória This de Souza" },
+                    { grade: "1C", name: "Evellyn Flores Coimbra" },
+                    { grade: "1C", name: "Gabriela de Paula Franca" },
+                    { grade: "1C", name: "Jhenifer Caroline da Silva Martins" }
+                ]
+            },
+            {
+                title: "Medicina Veterinária",
+                category: "Biológicas/Terra",
+                icon: "🐾",
+                students: [
+                    { grade: "3A", name: "Gabriel Dias dos Santos" },
+                    { grade: "3A", name: "Isabelly Martins Oliveira" },
+                    { grade: "3B", name: "Nivia da Costa Ramos" },
+                    { grade: "2A", name: "Maysa de Oliveira Silva" },
+                    { grade: "2A", name: "Nicolly Beatriz de Godohe Vieira" },
+                    { grade: "2C", name: "Marcos Gabriel de Oliveira" },
+                    { grade: "1A", name: "Lavínia de Jesus Frazão" },
+                    { grade: "1C", name: "Pedro Henrique Paula Bueno Santos" }
+                ]
+            },
+            {
+                title: "Nutrição",
+                category: "Saúde",
+                icon: "🥗",
+                students: [
+                    { grade: "3A", name: "Kathlen Silva Santos" },
+                    { grade: "3A", name: "Ketllyn Vitoria do Nascimento Santos" },
+                    { grade: "3B", name: "Arthur Rodrigues dos Santos" },
+                    { grade: "3B", name: "Mateus Isaias Montagnana dos Santos" },
+                    { grade: "2C", name: "Ester da Silva Andrade" },
+                    { grade: "2C", name: "Lara Saldanha Pedroza" },
+                    { grade: "1B", name: "Isabely do Nascimento Pinheiro" }
+                ]
+            },
+            {
+                title: "Perícia Criminal",
+                category: "Saúde",
+                icon: "🔍",
+                students: [
+                    { grade: "2B", name: "Hugo Henrique Ribeiro de Souza" },
+                    { grade: "2C", name: "Vitoria de Jesus Saroa" },
+                    { grade: "1A", name: "Felipe Mathias Nery dos Santos" },
+                    { grade: "1A", name: "Joao Marcos Trindade de Assis Pinto" },
+                    { grade: "1B", name: "Maria Clara Fonseca M. dos Santos" },
+                    { grade: "1C", name: "Melody Yngridy Bispo da Silva" },
+                    { grade: "1C", name: "Victor Junio Moraes da Cruz" }
+                ]
+            },
+            {
+                title: "Psicologia",
+                category: "Humanas/Negócios",
+                icon: "🧠",
+                students: [
+                    { grade: "3A", name: "João Gabriel Silva Bispo" },
+                    { grade: "3B", name: "Guilherme Renato da Cunha" },
+                    { grade: "3B", name: "Yasmin Gabrielly Cardoso de Godoy" },
+                    { grade: "2A", name: "Giovana Lopes dos Reis Leal" },
+                    { grade: "2A", name: "Rayssa Sousa de Jesus" },
+                    { grade: "2C", name: "Rafaela Cristina Soares Vellardi" },
+                    { grade: "1A", name: "Emilly Sene Rodrigues" },
+                    { grade: "1B", name: "Luana Lima dos Santos" },
+                    { grade: "1C", name: "Clarice Gomes da Silva" }
+                ]
+            },
+            {
+                title: "Recursos Humanos",
+                category: "Humanas/Negócios",
+                icon: "🤝",
+                students: [
+                    { grade: "2A", name: "Enzo Nunes de Oliveira" },
+                    { grade: "2A", name: "Yasmin de Moraes Silva" },
+                    { grade: "2C", name: "Ariane Novais Alves de Faria" },
+                    { grade: "2C", name: "Iolanda Caroline Santos Guimarães" },
+                    { grade: "2C", name: "Laryssa Stefanny Alves" },
+                    { grade: "1C", name: "Maria Eduarda Silverio de Souza" }
+                ]
+            },
+            {
+                title: "Robótica",
+                category: "Tecnologia/STEM",
+                icon: "🤖",
+                students: [
+                    { grade: "2B", name: "Bryan Gabriel Roepke da Silva" },
+                    { grade: "2B", name: "Joao Paulo de Souza Mendonça" },
+                    { grade: "2C", name: "Guilherme Rycardo dos Santos Bueno" },
+                    { grade: "1A", name: "Jonathan Matheus Pereira" },
+                    { grade: "1A", name: "Miguel de Oliveira Alves" },
+                    { grade: "1B", name: "Danillo Pereira Oliveira" },
+                    { grade: "1B", name: "Gabriel Henrique de Souza Belo" },
+                    { grade: "1B", name: "Jean Carlos Coutinho Pinto" },
+                    { grade: "1B", name: "Nicolas Leonardo Martins de Oliveira" },
+                    { grade: "1B", name: "Nicolly Mattos Fraga Cardoso" },
+                    { grade: "1C", name: "Saymon Gabriel de Souza" }
+                ]
+            }
+        ];
+
+        function renderDirectory(data, gradeFilter = "ALL", searchFilter = "") {
+            const container = document.getElementById("professionsContainer");
+            container.innerHTML = "";
+            let visibleCount = 0;
+
+            data.forEach(prof => {
+                // Filter students by grade if selected
+                let filteredStudents = prof.students;
+                if (gradeFilter !== "ALL") {
+                    filteredStudents = prof.students.filter(s => s.grade.startsWith(gradeFilter));
+                }
+
+                // Filter by search text
+                if (searchFilter.trim() !== "") {
+                    const query = searchFilter.toLowerCase();
+                    const matchesTitle = prof.title.toLowerCase().includes(query);
+                    const matchesCategory = prof.category.toLowerCase().includes(query);
+                    const matchingStudents = filteredStudents.filter(s => s.name.toLowerCase().includes(query));
+
+                    if (!matchesTitle && !matchesCategory && matchingStudents.length === 0) {
+                        return; // Skip this card if nothing matches
+                    }
+
+                    if (!matchesTitle && !matchesCategory && matchingStudents.length > 0) {
+                        filteredStudents = matchingStudents;
+                    }
+                }
+
+                if (filteredStudents.length === 0) return;
+
+                visibleCount++;
+
+                // Sort students so 3rd year appears first, then 2nd, then 1st
+                const sortedStudents = [...filteredStudents].sort((a, b) => {
+                    const gradeOrder = { "3": 1, "2": 2, "1": 3 };
+                    const orderA = gradeOrder[a.grade.charAt(0)] || 9;
+                    const orderB = gradeOrder[b.grade.charAt(0)] || 9;
+                    if (orderA !== orderB) return orderA - orderB;
+                    return a.name.localeCompare(b.name);
+                });
+
+                const cardHtml = `
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between">
+                        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-semibold px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md uppercase tracking-wider">${prof.category}</span>
+                                <h4 class="text-base font-extrabold text-slate-900 mt-2 flex items-center gap-2">
+                                    <span>${prof.icon}</span> ${prof.title}
+                                </h4>
+                            </div>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-800 text-white rounded-full">
+                                ${sortedStudents.length} ${sortedStudents.length === 1 ? 'aluno' : 'alunos'}
+                            </span>
+                        </div>
+                        <div class="p-5 space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                            <ul class="space-y-2 text-xs">
+                                ${sortedStudents.map(s => {
+                                    const is3rdYear = s.grade.startsWith("3");
+                                    return `
+                                        <li class="flex items-center justify-between p-2 rounded ${is3rdYear ? 'bg-amber-50 border border-amber-200/80 font-medium' : 'bg-slate-50'}">
+                                            <span class="text-slate-800">${s.name}</span>
+                                            <span class="px-2 py-0.5 text-[10px] font-black rounded ${is3rdYear ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'}">
+                                                ${s.grade}
+                                            </span>
+                                        </li>
+                                    `;
+                                }).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+
+            document.getElementById("visibleCount").innerText = visibleCount;
+        }
+
+        function initCharts() {
+            // Chart 1: Macroareas
+            const ctxAreas = document.getElementById('chartAreas').getContext('2d');
+            new Chart(ctxAreas, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Saúde & Bem-Estar',
+                        'Tecnologia & Exatas',
+                        'Esporte, Aviação & Segurança',
+                        'Humanas & Negócios',
+                        'Artes, Comunicação & Mídias',
+                        'Biológicas & Agrárias'
+                    ],
+                    datasets: [{
+                        data: [59, 42, 31, 29, 22, 13],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#06b6d4',
+                            '#ef4444',
+                            '#8b5cf6',
+                            '#f59e0b',
+                            '#10b981'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Chart 2: Top Ranking
+            const ctxRanking = document.getElementById('chartRanking').getContext('2d');
+            new Chart(ctxRanking, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Robótica', 'TI / Prog.', 'Fisioterapia', 'Medicina', 
+                        'Enfermagem', 'Engenharia', 'Psicologia', 'Arq. & Eng. Civil',
+                        'Atleta Profissional', 'Direito', 'Vet.', 'Fotografia/Cinema'
+                    ],
+                    datasets: [{
+                        label: 'Número de Alunos',
+                        data: [11, 11, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 2 } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Chart 3: Grade Distribution
+            const ctxGrade = document.getElementById('chartGradeDistribution').getContext('2d');
+            new Chart(ctxGrade, {
+                type: 'pie',
+                data: {
+                    labels: ['3º Ano (Prioridade)', '2º Ano', '1º Ano'],
+                    datasets: [{
+                        data: [45, 58, 93],
+                        backgroundColor: ['#f59e0b', '#8b5cf6', '#3b82f6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Chart 4: 3rd Year Top Choices
+            const ctxThird = document.getElementById('chartThirdYear').getContext('2d');
+            new Chart(ctxThird, {
+                type: 'bar',
+                data: {
+                    labels: ['Biomedicina', 'Nutrição', 'Fisioterapia', 'Enfermagem', 'Agronomia', 'Psicologia', 'Atleta Prof.'],
+                    datasets: [{
+                        label: 'Alunos do 3º Ano',
+                        data: [3, 3, 3, 3, 3, 3, 2],
+                        backgroundColor: '#f59e0b',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        window.onload = function() {
+            renderDirectory(professionData);
+            initCharts();
+
+            const searchInput = document.getElementById("searchInput");
+            const filterGrade = document.getElementById("filterGrade");
+            const resetBtn = document.getElementById("resetFilters");
+
+            function updateFilters() {
+                renderDirectory(professionData, filterGrade.value, searchInput.value);
+            }
+
+            searchInput.addEventListener("input", updateFilters);
+            filterGrade.addEventListener("change", updateFilters);
+
+            resetBtn.addEventListener("click", function() {
+                searchInput.value = "";
+                filterGrade.value = "ALL";
+                renderDirectory(professionData);
+            });
+        };
+    </script>
+</body>
+</html>
